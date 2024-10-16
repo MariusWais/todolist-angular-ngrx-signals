@@ -1,0 +1,42 @@
+<div class="todo-list">
+  <h1 class="todo-list__title">TODO</h1>
+
+  <div class="todo-list__input-form">
+    <form [formGroup]="form" class="todo-list__form">
+
+      <input class="todo-list__input" formControlName="todoText" type="text">
+
+      <button (click)="onAddTodo()" class="todo-list__button">Add</button>
+
+      @if (store.loading()) {
+        <div class="todo-list__loading">
+          <span>Loading...</span>
+        </div>
+      }
+
+      <div class="todo-list__error-messages">
+        @if (showError && form.get('todoText')?.errors?.['required']) {
+          <small class="todo-list__error-message">
+            Todo text is required
+          </small>
+        }
+        @if (showError && form.get('todoText')?.errors?.['maxlength']) {
+          <small class="todo-list__error-message">
+            Todo text cannot exceed 50 characters
+          </small>
+        }
+      </div>
+
+    </form>
+  </div>
+
+  <div class="todo-list__items">
+    <div>
+      @for (todoItem of store.filteredTodos()(form.get('todoText')?.value ?? ''); track todoItem.id) {
+        <div class="todo-list__item">
+          {{ todoItem.todo }}
+        </div>
+      }
+    </div>
+  </div>
+</div>
